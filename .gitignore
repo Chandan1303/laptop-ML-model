@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+
+# Machine Learning Models and Encoders (keep in repo as they're needed)
+# Commenting out so models are included
+# *.pkl
+
+# CSV Data files (exclude raw/messy data, keep cleaned if needed)
+amazon_laptop_prices_v01 (1).csv
+single_amazon_laptop_messy_dataset_1-10.csv
+cleaned_amazon_laptop_prices.csv
+cleaned_messy_laptop_data_v2.csv
+final_combined_laptop_data.csv
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local

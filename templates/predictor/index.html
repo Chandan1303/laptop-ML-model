@@ -1,0 +1,398 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaptopAI Brand Predictor</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-logo-block">
+          <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon"
+            class="amazon-logo-img" />
+        </div>
+        <div class="nav-sep"></div>
+        <div class="nav-brand">
+          <i class="fa-solid fa-laptop nav-brand-icon"></i>
+          <span class="nav-brand-text">LaptopAI</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="{% url 'predict_price' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;">
+          <i class="fa-solid fa-indian-rupee-sign"></i> Price Predictor
+        </a>
+        <a href="{% url 'patterns' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-shapes"></i> Design Patterns
+        </a>
+        <span class="nav-pill" style="margin-left:8px;">
+          <span class="nav-dot"></span>
+          ML Powered
+        </span>
+        <span class="nav-pill nav-pill-outline">Random Forest</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <i class="fa-solid fa-robot"></i>
+          AI Powered Brand Prediction
+        </div>
+        <h1 class="hero-title">
+          Discover Your<br />
+          <span class="hero-title-accent">Laptop Brand</span>
+        </h1>
+        <p class="hero-desc">
+          Enter your laptop specifications and our trained Random Forest model
+          instantly predicts the brand with confidence scores.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-val">15</div>
+            <div class="hero-stat-key">Brands</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">300</div>
+            <div class="hero-stat-key">Trees</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">89%</div>
+            <div class="hero-stat-key">Accuracy</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">8</div>
+            <div class="hero-stat-key">Features</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-card-visual">
+          <div class="hcv-glow"></div>
+          <div class="hcv-icon-wrap">
+            <i class="fa-solid fa-laptop hcv-icon"></i>
+            <div class="hcv-ring r1"></div>
+            <div class="hcv-ring r2"></div>
+          </div>
+          <div class="hcv-badge">
+            <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon"
+              class="hcv-amz-logo" />
+            <span>Dataset</span>
+          </div>
+          <div class="hcv-tags">
+            <span class="hcv-tag">scikit-learn</span>
+            <span class="hcv-tag">Django</span>
+            <span class="hcv-tag">Python</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════ -->
+  <main class="page-main">
+    <div class="page-inner">
+
+      <!-- LEFT COLUMN -->
+      <div class="col-left">
+
+        {% if predicted_brand %}
+        <!-- RESULT -->
+        <div class="result-card animate-drop">
+          <div class="result-top">
+            <div class="result-top-left">
+              <div class="result-check"><i class="fa-solid fa-circle-check"></i></div>
+              <div>
+                <div class="result-eyebrow">Prediction Complete</div>
+                <div class="result-brand-name">{{ predicted_brand }}</div>
+              </div>
+            </div>
+            <div class="result-badge">Top Match</div>
+          </div>
+
+          <div class="result-divider"></div>
+
+          <div class="result-scores">
+            <div class="scores-label">
+              <i class="fa-solid fa-chart-simple"></i>
+              Confidence Scores
+            </div>
+            {% for brand, pct in top3 %}
+            <div class="score-row">
+              <div class="score-meta">
+                <div class="score-rank rank{{ forloop.counter }}">{{ forloop.counter }}</div>
+                <span class="score-name">{{ brand }}</span>
+              </div>
+              <div class="score-bar-wrap">
+                <div class="score-bar-track">
+                  <div class="score-bar-fill fill{{ forloop.counter }}" style="width:{{ pct }}%"></div>
+                </div>
+                <span class="score-pct pct{{ forloop.counter }}">{{ pct }}%</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert-error">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <!-- FORM -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="form-card-title">
+              <i class="fa-solid fa-sliders"></i>
+              Laptop Specifications
+            </div>
+            <div class="form-card-sub">Fill in all fields for best accuracy</div>
+          </div>
+
+          <form method="POST" id="predictForm" class="spec-form">
+            {% csrf_token %}
+
+            <div class="spec-section-label">Numeric Specs</div>
+            <div class="spec-grid spec-grid-5">
+              <div class="field">
+                <label for="price">
+                  <i class="fa-solid fa-indian-rupee-sign"></i> Price
+                </label>
+                <div class="input-wrap">
+                  <input type="number" id="price" name="price" placeholder="61000" step="100" min="0"
+                    value="{{ form_data.price|default:'' }}" required />
+                  <span class="input-unit">₹</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="rating">
+                  <i class="fa-solid fa-star"></i> Rating
+                </label>
+                <div class="input-wrap">
+                  <input type="number" id="rating" name="rating" placeholder="4.3" step="0.1" min="0" max="5"
+                    value="{{ form_data.rating|default:'' }}" required />
+                  <span class="input-unit">/ 5</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="screen_size">
+                  <i class="fa-solid fa-display"></i> Screen
+                </label>
+                <div class="input-wrap">
+                  <input type="number" id="screen_size" name="screen_size" placeholder="15.6" step="0.1" min="10"
+                    max="20" value="{{ form_data.screen_size|default:'' }}" required />
+                  <span class="input-unit">in</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="storage_gb">
+                  <i class="fa-solid fa-hard-drive"></i> Storage
+                </label>
+                <div class="input-wrap">
+                  <input type="number" id="storage_gb" name="storage_gb" placeholder="512" step="1" min="0"
+                    value="{{ form_data.storage_gb|default:'' }}" required />
+                  <span class="input-unit">GB</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="ram_gb">
+                  <i class="fa-solid fa-memory"></i> RAM
+                </label>
+                <div class="input-wrap">
+                  <input type="number" id="ram_gb" name="ram_gb" placeholder="16" step="1" min="1"
+                    value="{{ form_data.ram_gb|default:'' }}" required />
+                  <span class="input-unit">GB</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="spec-section-label" style="margin-top:24px">Component Details</div>
+            <div class="spec-grid spec-grid-3">
+              <div class="field">
+                <label for="cpu">
+                  <i class="fa-solid fa-microchip"></i> Processor
+                </label>
+                <div class="select-wrap">
+                  <select id="cpu" name="cpu" required>
+                    <option value="" disabled {% if not form_data.cpu %}selected{% endif %}>Select CPU</option>
+                    {% for c in cpu_choices %}
+                    <option value="{{ c }}" {% if form_data.cpu == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                  </select>
+                  <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+              </div>
+              <div class="field">
+                <label for="os">
+                  <i class="fa-brands fa-windows"></i> Operating System
+                </label>
+                <div class="select-wrap">
+                  <select id="os" name="os" required>
+                    <option value="" disabled {% if not form_data.os %}selected{% endif %}>Select OS</option>
+                    {% for o in os_choices %}
+                    <option value="{{ o }}" {% if form_data.os == o %}selected{% endif %}>{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                  <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+              </div>
+              <div class="field">
+                <label for="graphics">
+                  <i class="fa-solid fa-tv"></i> Graphics Card
+                </label>
+                <div class="select-wrap">
+                  <select id="graphics" name="graphics" required>
+                    <option value="" disabled {% if not form_data.graphics %}selected{% endif %}>Select GPU</option>
+                    {% for g in graphics_choices %}
+                    <option value="{{ g }}" {% if form_data.graphics == g %}selected{% endif %}>{{ g }}</option>
+                    {% endfor %}
+                  </select>
+                  <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="predict-btn" id="submitBtn">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span id="btnText">Predict Brand</span>
+              <i class="fa-solid fa-spinner fa-spin" id="btnSpinner" style="display:none"></i>
+            </button>
+          </form>
+        </div>
+
+      </div><!-- /col-left -->
+
+      <!-- RIGHT COLUMN -->
+      <div class="col-right">
+
+        <!-- HOW IT WORKS -->
+        <div class="side-card">
+          <div class="side-card-title">
+            <i class="fa-solid fa-circle-info"></i> How It Works
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-text">
+                <div class="step-head">Enter Specs</div>
+                <div class="step-sub">Fill in price, RAM, storage and other details</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-text">
+                <div class="step-head">ML Inference</div>
+                <div class="step-sub">Random Forest analyses 8 features across 300 trees</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-text">
+                <div class="step-head">Get Results</div>
+                <div class="step-sub">See predicted brand with top 3 confidence scores</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUPPORTED BRANDS -->
+        <div class="side-card">
+          <div class="side-card-title">
+            <i class="fa-solid fa-award"></i> Supported Brands
+          </div>
+          <div class="brands-wrap">
+            {% for brand in "Acer,Alienware,Apple,Asus,Dell,Gigabyte,HP,Lenovo,LG,Microsoft,MSI,Panasonic,Razer,Samsung,Toughbook"|split:"," %}
+            <span class="brand-tag">{{ brand }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- MODEL INFO -->
+        <div class="side-card side-card-dark">
+          <div class="side-card-title side-card-title-light">
+            <i class="fa-solid fa-brain"></i> Model Info
+          </div>
+          <div class="model-stats">
+            <div class="mstat">
+              <div class="mstat-val">89%</div>
+              <div class="mstat-key">Accuracy</div>
+            </div>
+            <div class="mstat">
+              <div class="mstat-val">300</div>
+              <div class="mstat-key">Estimators</div>
+            </div>
+            <div class="mstat">
+              <div class="mstat-val">25</div>
+              <div class="mstat-key">Max Depth</div>
+            </div>
+            <div class="mstat">
+              <div class="mstat-val">4.5K</div>
+              <div class="mstat-key">Samples</div>
+            </div>
+          </div>
+          <div class="model-algo">Random Forest Classifier</div>
+        </div>
+
+      </div><!-- /col-right -->
+
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon"
+            class="footer-amz-logo" />
+          <span class="footer-x">|</span>
+          <span class="footer-name">
+            <i class="fa-solid fa-laptop"></i> LaptopAI
+          </span>
+        </div>
+        <div class="footer-links">
+          <span>Built with Django</span>
+          <span class="fdot"></span>
+          <span>scikit-learn</span>
+          <span class="fdot"></span>
+          <span>Python</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>2026 LaptopAI. ML Powered Brand Prediction Engine.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

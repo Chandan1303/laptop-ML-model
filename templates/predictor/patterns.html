@@ -1,0 +1,327 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaptopAI — Design Patterns</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ── Page layout ── */
+    .dp-page { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── Summary bar ── */
+    .dp-summary { display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; }
+    .dp-sum-card { flex: 1; min-width: 160px; background: var(--card-bg); border-radius: var(--r-lg);
+                   padding: 20px 24px; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 14px; }
+    .dp-sum-icon { width: 44px; height: 44px; border-radius: var(--r-md); display: flex;
+                   align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .dp-sum-icon.blue  { background: #dbeafe; color: #2563eb; }
+    .dp-sum-icon.orange{ background: #fff7ed; color: #f97316; }
+    .dp-sum-icon.green { background: #dcfce7; color: #16a34a; }
+    .dp-sum-icon.total { background: #f3f4f6; color: #374151; }
+    .dp-sum-val  { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; }
+    .dp-sum-key  { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+    /* ── Section header ── */
+    .dp-section-head { display: flex; align-items: center; gap: 12px; margin: 40px 0 20px; }
+    .dp-section-badge { padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+                        text-transform: uppercase; letter-spacing: .06em; }
+    .dp-section-badge.blue   { background: #dbeafe; color: #1d4ed8; }
+    .dp-section-badge.orange { background: #fff7ed; color: #c2410c; }
+    .dp-section-badge.green  { background: #dcfce7; color: #15803d; }
+    .dp-section-line { flex: 1; height: 1px; background: var(--border); }
+    .dp-section-count { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+    /* ── Pattern grid ── */
+    .dp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+
+    /* ── Pattern card ── */
+    .dp-card { background: var(--card-bg); border-radius: var(--r-lg); box-shadow: var(--shadow-md);
+               overflow: hidden; border: 1px solid var(--border); transition: transform .2s, box-shadow .2s; }
+    .dp-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+    .dp-card-top { padding: 20px 22px 16px; display: flex; align-items: flex-start; gap: 14px; }
+    .dp-num-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+                    justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+    .dp-num-badge.blue   { background: #dbeafe; color: #1d4ed8; }
+    .dp-num-badge.orange { background: #fff7ed; color: #c2410c; }
+    .dp-num-badge.green  { background: #dcfce7; color: #15803d; }
+
+    .dp-card-meta { flex: 1; }
+    .dp-cat-pill { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+                   letter-spacing: .07em; padding: 2px 8px; border-radius: 10px; margin-bottom: 4px; }
+    .dp-cat-pill.blue   { background: #dbeafe; color: #1d4ed8; }
+    .dp-cat-pill.orange { background: #fff7ed; color: #c2410c; }
+    .dp-cat-pill.green  { background: #dcfce7; color: #15803d; }
+    .dp-name { font-size: 17px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .dp-name i { font-size: 14px; }
+    .dp-class { font-size: 11px; color: var(--text-muted); font-family: 'Courier New', monospace;
+                margin-top: 3px; word-break: break-word; }
+
+    .dp-divider { height: 1px; background: var(--border); margin: 0 22px; }
+
+    .dp-card-body { padding: 16px 22px; }
+    .dp-purpose { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
+    .dp-used-in { display: flex; align-items: flex-start; gap: 6px; font-size: 11px;
+                  color: var(--text-muted); margin-bottom: 14px; }
+    .dp-used-in i { color: var(--orange); margin-top: 1px; flex-shrink: 0; }
+    .dp-used-in code { font-family: 'Courier New', monospace; color: var(--blue); word-break: break-all; }
+
+    .dp-code { background: #0f172a; border-radius: var(--r-md); padding: 12px 14px; overflow-x: auto; }
+    .dp-code pre { margin: 0; font-size: 11px; color: #e2e8f0; font-family: 'Courier New', monospace;
+                   line-height: 1.6; white-space: pre; }
+
+    /* ── Pipeline flow diagram ── */
+    .dp-flow { background: var(--card-bg); border-radius: var(--r-lg); box-shadow: var(--shadow-md);
+               padding: 28px 32px; margin-bottom: 40px; border: 1px solid var(--border); }
+    .dp-flow-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;
+                     display: flex; align-items: center; gap: 8px; }
+    .dp-flow-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .dp-flow-step { background: #f8fafc; border: 1px solid var(--border); border-radius: var(--r-md);
+                    padding: 10px 16px; text-align: center; min-width: 120px; }
+    .dp-flow-step-name { font-size: 12px; font-weight: 700; color: var(--text-main); }
+    .dp-flow-step-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; justify-content: center; }
+    .dp-flow-tag { font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 8px; }
+    .dp-flow-tag.blue   { background: #dbeafe; color: #1d4ed8; }
+    .dp-flow-tag.orange { background: #fff7ed; color: #c2410c; }
+    .dp-flow-tag.green  { background: #dcfce7; color: #15803d; }
+    .dp-flow-arrow { color: var(--text-light); font-size: 18px; }
+
+    /* ── Page hero ── */
+    .dp-hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+               border-radius: var(--r-lg); padding: 36px 40px; margin-bottom: 32px;
+               display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .dp-hero-left h1 { font-size: 28px; font-weight: 800; color: #f8fafc; margin-bottom: 8px; }
+    .dp-hero-left p  { font-size: 14px; color: #94a3b8; max-width: 480px; line-height: 1.6; }
+    .dp-hero-pills { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .dp-hero-pill { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .dp-hero-pill.blue   { background: rgba(37,99,235,.25); color: #93c5fd; }
+    .dp-hero-pill.orange { background: rgba(249,115,22,.2); color: #fdba74; }
+    .dp-hero-pill.green  { background: rgba(22,163,74,.2); color: #86efac; }
+    .dp-hero-right { font-size: 64px; opacity: .15; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-logo-block">
+          <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="amazon-logo-img" />
+        </div>
+        <div class="nav-sep"></div>
+        <div class="nav-brand">
+          <i class="fa-solid fa-laptop nav-brand-icon"></i>
+          <span class="nav-brand-text">LaptopAI</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="{% url 'index' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;">
+          <i class="fa-solid fa-tag"></i> Brand Predictor
+        </a>
+        <a href="{% url 'predict_price' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-indian-rupee-sign"></i> Price Predictor
+        </a>
+        <span class="nav-pill" style="margin-left:8px;">
+          <span class="nav-dot"></span> Design Patterns
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dp-page">
+
+    <!-- HERO -->
+    <div class="dp-hero">
+      <div class="dp-hero-left">
+        <h1><i class="fa-solid fa-shapes" style="color:var(--orange)"></i> Design Patterns</h1>
+        <p>This project implements 10 Gang of Four design patterns across the ML pipeline, from data cleaning to model training and prediction.</p>
+        <div class="dp-hero-pills">
+          <span class="dp-hero-pill blue">3 Creational</span>
+          <span class="dp-hero-pill orange">3 Structural</span>
+          <span class="dp-hero-pill green">4 Behavioral</span>
+        </div>
+      </div>
+      <div class="dp-hero-right"><i class="fa-solid fa-diagram-project"></i></div>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div class="dp-summary">
+      <div class="dp-sum-card">
+        <div class="dp-sum-icon total"><i class="fa-solid fa-shapes"></i></div>
+        <div><div class="dp-sum-val">10</div><div class="dp-sum-key">Total Patterns</div></div>
+      </div>
+      <div class="dp-sum-card">
+        <div class="dp-sum-icon blue"><i class="fa-solid fa-hammer"></i></div>
+        <div><div class="dp-sum-val">3</div><div class="dp-sum-key">Creational</div></div>
+      </div>
+      <div class="dp-sum-card">
+        <div class="dp-sum-icon orange"><i class="fa-solid fa-sitemap"></i></div>
+        <div><div class="dp-sum-val">3</div><div class="dp-sum-key">Structural</div></div>
+      </div>
+      <div class="dp-sum-card">
+        <div class="dp-sum-icon green"><i class="fa-solid fa-arrows-spin"></i></div>
+        <div><div class="dp-sum-val">4</div><div class="dp-sum-key">Behavioral</div></div>
+      </div>
+    </div>
+
+    <!-- PIPELINE FLOW -->
+    <div class="dp-flow">
+      <div class="dp-flow-title"><i class="fa-solid fa-diagram-project" style="color:var(--orange)"></i> How Patterns Wire Together in the Pipeline</div>
+      <div class="dp-flow-steps">
+        <div class="dp-flow-step">
+          <div class="dp-flow-step-name">Raw CSV</div>
+          <div class="dp-flow-step-tags"><span class="dp-flow-tag blue">Input</span></div>
+        </div>
+        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="dp-flow-step">
+          <div class="dp-flow-step-name">Clean</div>
+          <div class="dp-flow-step-tags">
+            <span class="dp-flow-tag blue">Factory</span>
+            <span class="dp-flow-tag orange">Decorator</span>
+            <span class="dp-flow-tag green">Strategy</span>
+            <span class="dp-flow-tag green">Template</span>
+            <span class="dp-flow-tag green">Command</span>
+          </div>
+        </div>
+        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="dp-flow-step">
+          <div class="dp-flow-step-name">Merge</div>
+          <div class="dp-flow-step-tags"><span class="dp-flow-tag orange">Adapter</span></div>
+        </div>
+        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="dp-flow-step">
+          <div class="dp-flow-step-name">Train</div>
+          <div class="dp-flow-step-tags">
+            <span class="dp-flow-tag blue">Builder</span>
+            <span class="dp-flow-tag green">Command</span>
+            <span class="dp-flow-tag green">Observer</span>
+          </div>
+        </div>
+        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="dp-flow-step">
+          <div class="dp-flow-step-name">Save</div>
+          <div class="dp-flow-step-tags">
+            <span class="dp-flow-tag blue">Singleton</span>
+            <span class="dp-flow-tag green">Command</span>
+          </div>
+        </div>
+        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="dp-flow-step">
+          <div class="dp-flow-step-name">Predict</div>
+          <div class="dp-flow-step-tags">
+            <span class="dp-flow-tag orange">Facade</span>
+            <span class="dp-flow-tag blue">Singleton</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATIONAL -->
+    <div class="dp-section-head">
+      <span class="dp-section-badge blue"><i class="fa-solid fa-hammer"></i> Creational</span>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-count">{{ creational|length }} patterns — deal with object creation</span>
+    </div>
+    <div class="dp-grid">
+      {% for p in creational %}
+      <div class="dp-card">
+        <div class="dp-card-top">
+          <div class="dp-num-badge {{ p.category_color }}">{{ p.number }}</div>
+          <div class="dp-card-meta">
+            <span class="dp-cat-pill {{ p.category_color }}">{{ p.category }}</span>
+            <div class="dp-name"><i class="fa-solid {{ p.icon }}"></i> {{ p.name }}</div>
+            <div class="dp-class">{{ p.class_name }}</div>
+          </div>
+        </div>
+        <div class="dp-divider"></div>
+        <div class="dp-card-body">
+          <div class="dp-purpose">{{ p.purpose }}</div>
+          <div class="dp-used-in"><i class="fa-solid fa-location-arrow"></i><span>Used in: <code>{{ p.used_in }}</code></span></div>
+          <div class="dp-code"><pre>{{ p.code_snippet }}</pre></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- STRUCTURAL -->
+    <div class="dp-section-head">
+      <span class="dp-section-badge orange"><i class="fa-solid fa-sitemap"></i> Structural</span>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-count">{{ structural|length }} patterns — deal with object composition</span>
+    </div>
+    <div class="dp-grid">
+      {% for p in structural %}
+      <div class="dp-card">
+        <div class="dp-card-top">
+          <div class="dp-num-badge {{ p.category_color }}">{{ p.number }}</div>
+          <div class="dp-card-meta">
+            <span class="dp-cat-pill {{ p.category_color }}">{{ p.category }}</span>
+            <div class="dp-name"><i class="fa-solid {{ p.icon }}"></i> {{ p.name }}</div>
+            <div class="dp-class">{{ p.class_name }}</div>
+          </div>
+        </div>
+        <div class="dp-divider"></div>
+        <div class="dp-card-body">
+          <div class="dp-purpose">{{ p.purpose }}</div>
+          <div class="dp-used-in"><i class="fa-solid fa-location-arrow"></i><span>Used in: <code>{{ p.used_in }}</code></span></div>
+          <div class="dp-code"><pre>{{ p.code_snippet }}</pre></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- BEHAVIORAL -->
+    <div class="dp-section-head">
+      <span class="dp-section-badge green"><i class="fa-solid fa-arrows-spin"></i> Behavioral</span>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-count">{{ behavioral|length }} patterns — deal with communication between objects</span>
+    </div>
+    <div class="dp-grid">
+      {% for p in behavioral %}
+      <div class="dp-card">
+        <div class="dp-card-top">
+          <div class="dp-num-badge {{ p.category_color }}">{{ p.number }}</div>
+          <div class="dp-card-meta">
+            <span class="dp-cat-pill {{ p.category_color }}">{{ p.category }}</span>
+            <div class="dp-name"><i class="fa-solid {{ p.icon }}"></i> {{ p.name }}</div>
+            <div class="dp-class">{{ p.class_name }}</div>
+          </div>
+        </div>
+        <div class="dp-divider"></div>
+        <div class="dp-card-body">
+          <div class="dp-purpose">{{ p.purpose }}</div>
+          <div class="dp-used-in"><i class="fa-solid fa-location-arrow"></i><span>Used in: <code>{{ p.used_in }}</code></span></div>
+          <div class="dp-code"><pre>{{ p.code_snippet }}</pre></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div><!-- /dp-page -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="footer-amz-logo" />
+          <span class="footer-x">|</span>
+          <span class="footer-name"><i class="fa-solid fa-laptop"></i> LaptopAI</span>
+        </div>
+        <div class="footer-links">
+          <span>Built with Django</span><span class="fdot"></span>
+          <span>scikit-learn</span><span class="fdot"></span>
+          <span>Python</span>
+        </div>
+      </div>
+      <div class="footer-bottom"><span>2026 LaptopAI. 10 Design Patterns in Action.</span></div>
+    </div>
+  </footer>
+
+</body>
+</html>
