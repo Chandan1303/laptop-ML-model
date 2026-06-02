@@ -9,6 +9,7 @@ __pycache__/
 *.log
 db.sqlite3
 db.sqlite3-journal
+staticfiles/
 
 # Machine Learning Models and Encoders (keep in repo as they're needed)
 # Commenting out so models are included
