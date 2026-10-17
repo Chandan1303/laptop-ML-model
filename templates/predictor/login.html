@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - LaptopPilot</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body class="login-page">
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-logo-block">
+          <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="amazon-logo-img" />
+        </div>
+        <div class="nav-sep"></div>
+        <div class="nav-brand">
+          <i class="fa-solid fa-laptop nav-brand-icon"></i>
+          <span class="nav-brand-text">LaptopPilot</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="{% url 'index' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;">
+          <i class="fa-solid fa-tag"></i> Brand Predictor
+        </a>
+        <a href="{% url 'predict_price' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-indian-rupee-sign"></i> Price Predictor
+        </a>
+        <a href="{% url 'patterns' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-shapes"></i> Design Patterns
+        </a>
+        <span class="nav-pill" style="margin-left:8px;">
+          <span class="nav-dot"></span>
+          ML Powered
+        </span>
+        <span class="nav-pill nav-pill-outline">Random Forest</span>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <i class="fa-solid fa-shield-halved"></i>
+          Secure Access Portal
+        </div>
+        <h1 class="hero-title">
+          Sign in to<br />
+          <span class="hero-title-accent">LaptopPilot</span>
+        </h1>
+        <p class="hero-desc">
+          Access the laptop brand predictor, price estimator, and ML-powered dashboard using your secure account.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-val">24/7</div>
+            <div class="hero-stat-key">Access</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">Secure</div>
+            <div class="hero-stat-key">Session</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">Django</div>
+            <div class="hero-stat-key">Auth</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">ML</div>
+            <div class="hero-stat-key">Ready</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-card-visual">
+          <div class="hcv-glow"></div>
+          <div class="hcv-icon-wrap">
+            <i class="fa-solid fa-user-shield hcv-icon"></i>
+            <div class="hcv-ring r1"></div>
+            <div class="hcv-ring r2"></div>
+          </div>
+          <div class="hcv-badge">
+            <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="hcv-amz-logo" />
+            <span>Protected</span>
+          </div>
+          <div class="hcv-tags">
+            <span class="hcv-tag">Django</span>
+            <span class="hcv-tag">Auth</span>
+            <span class="hcv-tag">CSRF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="page-main">
+    <div class="page-inner login-page-inner">
+      <div class="col-left">
+        {% if error %}
+        <div class="alert-error">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <div class="form-card login-card">
+          <div class="form-card-header">
+            <div class="form-card-title">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              Login to your account
+            </div>
+            <div class="form-card-sub">Use your username, email, and password to continue</div>
+          </div>
+
+          <form method="POST" class="spec-form login-form">
+            {% csrf_token %}
+
+            <div class="spec-section-label">Account Details</div>
+
+            <div class="field">
+              <label for="username">
+                <i class="fa-solid fa-user"></i> Username or email
+              </label>
+              <div class="input-wrap">
+                <input type="text" id="username" name="username" placeholder="Enter username or email" required autofocus />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="input-wrap password-input-wrap">
+                <input type="password" id="password" name="password" placeholder="Enter password" required />
+                <button type="button" class="password-toggle-btn" data-target="password" aria-label="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="predict-btn" id="submitBtn">
+              <span id="btnText">Login</span>
+              <i class="fa-solid fa-spinner fa-spin" id="btnSpinner" style="display:none"></i>
+            </button>
+
+            {% if resend_verification_email %}
+            <div style="margin-top: 10px; text-align: center;">
+              <a href="{% url 'resend_verification' %}?email={{ resend_verification_email|urlencode }}" style="color: var(--blue); text-decoration: none; font-weight: 600;">
+                Resend verification email
+              </a>
+            </div>
+            {% endif %}
+
+            <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:6px;">
+              <a href="{% url 'signup' %}" style="color:var(--blue);text-decoration:none;font-weight:600;">Create account</a>
+              <a href="{% url 'forgot_password' %}" id="forgot-password" style="color:var(--text-muted);text-decoration:none;font-weight:600;">Forgot password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="side-card side-card-dark">
+          <div class="side-card-title">
+            <i class="fa-solid fa-shield-halved"></i>
+            Security
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div>
+                <div class="step-head">Protected session</div>
+                <div class="step-sub">Each login is validated with Django authentication and CSRF protection.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div>
+                <div class="step-head">Secure access</div>
+                <div class="step-sub">Your user account controls access to prediction features and saved sessions.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div>
+                <div class="step-head">Admin access</div>
+                <div class="step-sub">Use the Django admin shell to create a superuser when needed.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-card">
+          <div class="side-card-title">
+            <i class="fa-solid fa-circle-info"></i>
+            Need help?
+          </div>
+          <div class="step-sub">
+            If you are the first user, create a superuser with <strong>python manage.py createsuperuser</strong> and then sign in with those credentials.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="footer-amz-logo" />
+          <span class="footer-x">|</span>
+          <span class="footer-name">
+            <i class="fa-solid fa-laptop"></i> LaptopPilot
+          </span>
+        </div>
+        <div class="footer-links">
+          <span>Built with Django</span>
+          <span class="fdot"></span>
+          <span>scikit-learn</span>
+          <span class="fdot"></span>
+          <span>Python</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>2026 LaptopPilot. ML Powered Brand Prediction Engine.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.password-toggle-btn').forEach(function (button) {
+      button.addEventListener('click', function () {
+        const target = document.getElementById(button.dataset.target);
+        if (!target) return;
+        const isHidden = target.type === 'password';
+        target.type = isHidden ? 'text' : 'password';
+        button.innerHTML = isHidden ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+        button.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+      });
+    });
+
+    document.querySelectorAll('.spec-form, .login-form').forEach(function (form) {
+      form.addEventListener('submit', function () {
+        const btn = form.querySelector('#submitBtn');
+        const spinner = form.querySelector('#btnSpinner');
+        const label = form.querySelector('#btnText');
+
+        if (label) label.textContent = 'Authenticating...';
+        if (spinner) spinner.style.display = 'inline-block';
+        if (btn) btn.disabled = true;
+      });
+    });
+  </script>
+</body>
+
+</html>

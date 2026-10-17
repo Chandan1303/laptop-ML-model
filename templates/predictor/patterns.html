@@ -4,13 +4,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LaptopAI — Design Patterns</title>
+  <title>LaptopPilot — Design Patterns</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ── Page layout ── */
-    .dp-page { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+    .dp-page { max-width: 1280px; margin: 0 auto; padding: 32px 18px 0; }
+    .dp-page + .footer {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-top: 0;
+      padding-top: 18px;
+      padding-bottom: 18px;
+    }
+    .qa-shell {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      margin-bottom: 0;
+      box-shadow: none;
+    }
+    .dp-patterns-shell {
+      background: rgba(248, 250, 252, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 26px 18px 18px;
+      box-shadow: var(--shadow-md);
+    }
 
     /* ── Summary bar ── */
     .dp-summary { display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; }
@@ -102,6 +124,71 @@
     .dp-hero-pill.orange { background: rgba(249,115,22,.2); color: #fdba74; }
     .dp-hero-pill.green  { background: rgba(22,163,74,.2); color: #86efac; }
     .dp-hero-right { font-size: 64px; opacity: .15; }
+
+    /* ── QA dashboard ── */
+    .qa-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0 28px; }
+    .qa-summary-card { background: var(--card-bg); border-radius: var(--r-lg); border: 1px solid var(--border);
+                      box-shadow: var(--shadow-md); padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
+    .qa-summary-card.success { border-left: 5px solid #16a34a; }
+    .qa-summary-card.danger { border-left: 5px solid #ef4444; }
+    .qa-summary-card.neutral { border-left: 5px solid #64748b; }
+    .qa-summary-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .success .qa-summary-icon { background: #dcfce7; color: #15803d; }
+    .danger .qa-summary-icon { background: #fee2e2; color: #b91c1c; }
+    .neutral .qa-summary-icon { background: #e2e8f0; color: #334155; }
+    .qa-summary-value { font-size: 28px; font-weight: 800; color: var(--text-main); line-height: 1; }
+    .qa-summary-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 4px; }
+
+    .qa-table-wrap { overflow-x: auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-md); }
+    .qa-table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    .qa-table th, .qa-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .qa-table th { background: #f8fafc; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+    .qa-table td { font-size: 13px; color: var(--text-main); }
+    .qa-table tbody tr:last-child td { border-bottom: none; }
+    .qa-table tbody tr:hover { background: #f8fafc; }
+    .qa-status-badge { display: inline-block; padding: 5px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .qa-table td:nth-child(4), .qa-table td:nth-child(5) { min-width: 220px; }
+    .qa-status-badge.pass { background: #dcfce7; color: #166534; }
+    .qa-status-badge.fail { background: #fee2e2; color: #991b1b; }
+
+    .defect-entry-form-wrap {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r-lg);
+      box-shadow: var(--shadow-md); padding: 20px 22px; margin-bottom: 18px;
+    }
+    .defect-form-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 16px;
+    }
+    .defect-field { display: flex; flex-direction: column; gap: 8px; }
+    .defect-field label {
+      font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em;
+    }
+    .defect-field input, .defect-field select, .defect-field textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 14px; color: var(--text-main); background: #fff; resize: vertical;
+    }
+    .defect-field input:focus, .defect-field select:focus, .defect-field textarea:focus {
+      outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+    }
+    .defect-full { grid-column: 1 / -1; }
+    .defect-submit-btn {
+      background: linear-gradient(135deg, var(--orange), var(--orange-d)); color: #fff; border: none; border-radius: 12px; padding: 12px 18px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow-sm); transition: transform .2s ease;
+    }
+    .defect-submit-btn:hover { transform: translateY(-1px); }
+
+    .defect-flow {
+      display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 12px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-md); padding: 18px 20px; margin-bottom: 22px;
+    }
+    .defect-flow-node {
+      flex: 1 1 150px; min-width: 150px; background: linear-gradient(135deg, #f8fafc, #eef2ff); border: 1px solid #dbeafe; border-radius: 12px; padding: 14px 12px; text-align: center;
+    }
+    .defect-flow-stage {
+      font-size: 12px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
+    }
+    .defect-flow-desc {
+      font-size: 11px; color: var(--text-muted); line-height: 1.5;
+    }
+    .defect-flow-arrow {
+      display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 18px; font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -116,7 +203,7 @@
         <div class="nav-sep"></div>
         <div class="nav-brand">
           <i class="fa-solid fa-laptop nav-brand-icon"></i>
-          <span class="nav-brand-text">LaptopAI</span>
+          <span class="nav-brand-text">LaptopPilot</span>
         </div>
       </div>
       <div class="nav-right">
@@ -126,6 +213,18 @@
         <a href="{% url 'predict_price' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
           <i class="fa-solid fa-indian-rupee-sign"></i> Price Predictor
         </a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+        <span class="nav-pill" style="margin-left:8px;">
+          <i class="fa-solid fa-user"></i> {{ user.username }}
+        </span>
+        {% else %}
+        <a href="{% url 'login' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-right-to-bracket"></i> Login
+        </a>
+        {% endif %}
         <span class="nav-pill" style="margin-left:8px;">
           <span class="nav-dot"></span> Design Patterns
         </span>
@@ -135,99 +234,330 @@
 
   <div class="dp-page">
 
-    <!-- HERO -->
-    <div class="dp-hero">
-      <div class="dp-hero-left">
-        <h1><i class="fa-solid fa-shapes" style="color:var(--orange)"></i> Design Patterns</h1>
-        <p>This project implements 10 Gang of Four design patterns across the ML pipeline, from data cleaning to model training and prediction.</p>
-        <div class="dp-hero-pills">
-          <span class="dp-hero-pill blue">3 Creational</span>
-          <span class="dp-hero-pill orange">3 Structural</span>
-          <span class="dp-hero-pill green">4 Behavioral</span>
-        </div>
+    <!-- QA & DEFECT MANAGEMENT -->
+    <div class="qa-shell">
+      <div class="dp-section-head" style="margin-top: 0; margin-bottom: 12px;">
+        <span class="dp-section-badge green"><i class="fa-solid fa-vial"></i> QA & Defect Management</span>
+        <div class="dp-section-line"></div>
+        <span class="dp-section-count">Separate quality tracking area</span>
       </div>
-      <div class="dp-hero-right"><i class="fa-solid fa-diagram-project"></i></div>
-    </div>
 
-    <!-- SUMMARY CARDS -->
-    <div class="dp-summary">
-      <div class="dp-sum-card">
-        <div class="dp-sum-icon total"><i class="fa-solid fa-shapes"></i></div>
-        <div><div class="dp-sum-val">10</div><div class="dp-sum-key">Total Patterns</div></div>
+      <div style="padding: 0 0 10px; margin-bottom: 18px;">
+        <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px;">Quality Assurance Dashboard</div>
+        <div style="font-size: 26px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Testing and defect tracking</div>
+        <div style="font-size: 14px; color: var(--text-muted);">This section is independent from the design pattern catalog and contains all QA, defect lifecycle, and issue reporting details.</div>
       </div>
-      <div class="dp-sum-card">
-        <div class="dp-sum-icon blue"><i class="fa-solid fa-hammer"></i></div>
-        <div><div class="dp-sum-val">3</div><div class="dp-sum-key">Creational</div></div>
-      </div>
-      <div class="dp-sum-card">
-        <div class="dp-sum-icon orange"><i class="fa-solid fa-sitemap"></i></div>
-        <div><div class="dp-sum-val">3</div><div class="dp-sum-key">Structural</div></div>
-      </div>
-      <div class="dp-sum-card">
-        <div class="dp-sum-icon green"><i class="fa-solid fa-arrows-spin"></i></div>
-        <div><div class="dp-sum-val">4</div><div class="dp-sum-key">Behavioral</div></div>
-      </div>
-    </div>
 
-    <!-- PIPELINE FLOW -->
-    <div class="dp-flow">
-      <div class="dp-flow-title"><i class="fa-solid fa-diagram-project" style="color:var(--orange)"></i> How Patterns Wire Together in the Pipeline</div>
-      <div class="dp-flow-steps">
-        <div class="dp-flow-step">
-          <div class="dp-flow-step-name">Raw CSV</div>
-          <div class="dp-flow-step-tags"><span class="dp-flow-tag blue">Input</span></div>
+    <div class="qa-summary">
+      <div class="qa-summary-card success">
+        <div class="qa-summary-icon"><i class="fa-solid fa-check-double"></i></div>
+        <div>
+          <div class="qa-summary-value">{{ qa_passed_count }}</div>
+          <div class="qa-summary-label">Passed</div>
         </div>
-        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-        <div class="dp-flow-step">
-          <div class="dp-flow-step-name">Clean</div>
-          <div class="dp-flow-step-tags">
-            <span class="dp-flow-tag blue">Factory</span>
-            <span class="dp-flow-tag orange">Decorator</span>
-            <span class="dp-flow-tag green">Strategy</span>
-            <span class="dp-flow-tag green">Template</span>
-            <span class="dp-flow-tag green">Command</span>
-          </div>
+      </div>
+      <div class="qa-summary-card danger">
+        <div class="qa-summary-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+        <div>
+          <div class="qa-summary-value">{{ qa_failed_count }}</div>
+          <div class="qa-summary-label">Failed</div>
         </div>
-        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-        <div class="dp-flow-step">
-          <div class="dp-flow-step-name">Merge</div>
-          <div class="dp-flow-step-tags"><span class="dp-flow-tag orange">Adapter</span></div>
-        </div>
-        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-        <div class="dp-flow-step">
-          <div class="dp-flow-step-name">Train</div>
-          <div class="dp-flow-step-tags">
-            <span class="dp-flow-tag blue">Builder</span>
-            <span class="dp-flow-tag green">Command</span>
-            <span class="dp-flow-tag green">Observer</span>
-          </div>
-        </div>
-        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-        <div class="dp-flow-step">
-          <div class="dp-flow-step-name">Save</div>
-          <div class="dp-flow-step-tags">
-            <span class="dp-flow-tag blue">Singleton</span>
-            <span class="dp-flow-tag green">Command</span>
-          </div>
-        </div>
-        <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-        <div class="dp-flow-step">
-          <div class="dp-flow-step-name">Predict</div>
-          <div class="dp-flow-step-tags">
-            <span class="dp-flow-tag orange">Facade</span>
-            <span class="dp-flow-tag blue">Singleton</span>
-          </div>
+      </div>
+      <div class="qa-summary-card neutral">
+        <div class="qa-summary-icon"><i class="fa-solid fa-list-check"></i></div>
+        <div>
+          <div class="qa-summary-value">{{ qa_total_count }}</div>
+          <div class="qa-summary-label">Total Tests</div>
         </div>
       </div>
     </div>
 
-    <!-- CREATIONAL -->
     <div class="dp-section-head">
-      <span class="dp-section-badge blue"><i class="fa-solid fa-hammer"></i> Creational</span>
+      <span class="dp-section-badge orange"><i class="fa-solid fa-bug"></i> Defect Report</span>
       <div class="dp-section-line"></div>
-      <span class="dp-section-count">{{ creational|length }} patterns — deal with object creation</span>
+      <span class="dp-section-count">{{ defect_total }} total defects tracked</span>
     </div>
-    <div class="dp-grid">
+
+    <div class="qa-summary">
+      <div class="qa-summary-card success">
+        <div class="qa-summary-icon"><i class="fa-solid fa-check-double"></i></div>
+        <div>
+          <div class="qa-summary-value">{{ defect_closed }}</div>
+          <div class="qa-summary-label">Closed</div>
+        </div>
+      </div>
+      <div class="qa-summary-card danger">
+        <div class="qa-summary-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div>
+          <div class="qa-summary-value">{{ defect_open }}</div>
+          <div class="qa-summary-label">Open</div>
+        </div>
+      </div>
+      <div class="qa-summary-card neutral">
+        <div class="qa-summary-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div>
+          <div class="qa-summary-value">{{ defect_density }}</div>
+          <div class="qa-summary-label">Defect Density</div>
+        </div>
+      </div>
+      <div class="qa-summary-card neutral">
+        <div class="qa-summary-icon"><i class="fa-solid fa-clock"></i></div>
+        <div>
+          <div class="qa-summary-value">{{ defect_productivity }}</div>
+          <div class="qa-summary-label">Productivity</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-table-wrap" style="margin-bottom: 26px;">
+      <table class="qa-table">
+        <thead>
+          <tr>
+            <th>Defect ID</th>
+            <th>Severity</th>
+            <th>Priority</th>
+            <th>Module</th>
+            <th>Issue</th>
+            <th>Root Cause</th>
+            <th>Status</th>
+            <th>Resolution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for defect in defect_report %}
+          <tr>
+            <td>{{ defect.id }}</td>
+            <td>{{ defect.severity }}</td>
+            <td>{{ defect.priority }}</td>
+            <td>{{ defect.module }}</td>
+            <td>{{ defect.description }}</td>
+            <td>{{ defect.root_cause }}</td>
+            <td><span class="qa-status-badge {% if defect.status == 'Closed' %}pass{% else %}fail{% endif %}">{{ defect.status }}</span></td>
+            <td>{{ defect.resolution }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="dp-section-head" style="margin-top: 36px;">
+      <span class="dp-section-badge blue"><i class="fa-solid fa-plus"></i> Add Defect</span>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-count">Log a new frontend defect</span>
+    </div>
+
+    <div class="defect-entry-form-wrap">
+      <form method="POST" class="defect-entry-form">
+        {% csrf_token %}
+        <div class="defect-form-grid">
+          <div class="defect-field">
+            <label for="defect_id">Defect ID</label>
+            <input type="text" id="defect_id" name="defect_id" placeholder="DEF-100" required>
+          </div>
+          <div class="defect-field">
+            <label for="severity">Severity</label>
+            <select id="severity" name="severity">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+              <option value="Critical">Critical</option>
+            </select>
+          </div>
+          <div class="defect-field">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <div class="defect-field">
+            <label for="module">Module</label>
+            <input type="text" id="module" name="module" value="Frontend Validation" required>
+          </div>
+        </div>
+        <div class="defect-form-grid">
+          <div class="defect-field defect-full">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3" required placeholder="Describe the defect observed in the UI or workflow"></textarea>
+          </div>
+        </div>
+        <div class="defect-form-grid">
+          <div class="defect-field defect-full">
+            <label for="root_cause">Root Cause</label>
+            <textarea id="root_cause" name="root_cause" rows="2" placeholder="Explain the likely cause"></textarea>
+          </div>
+        </div>
+        <div class="defect-form-grid">
+          <div class="defect-field">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+              <option value="New">New</option>
+              <option value="Open" selected>Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+          <div class="defect-field">
+            <label for="resolution">Resolution</label>
+            <input type="text" id="resolution" name="resolution" value="Pending review">
+          </div>
+        </div>
+        <button type="submit" class="defect-submit-btn"><i class="fa-solid fa-paper-plane"></i> Add to defect report</button>
+      </form>
+    </div>
+
+    <div class="dp-section-head" style="margin-top: 24px;">
+      <span class="dp-section-badge blue"><i class="fa-solid fa-arrows-spin"></i> Defect Life Cycle</span>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-count">Visual state flow for bug handling</span>
+    </div>
+
+    <div class="defect-flow">
+      {% for stage in defect_life_cycle %}
+        <div class="defect-flow-node">
+          <div class="defect-flow-stage">{{ stage.stage }}</div>
+          <div class="defect-flow-desc">{{ stage.description }}</div>
+        </div>
+        {% if not forloop.last %}
+        <div class="defect-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="dp-section-head" style="margin-top: 36px;">
+      <span class="dp-section-badge green"><i class="fa-solid fa-vial"></i> QA Validation</span>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-count">{{ qa_total_count }} tests — {{ qa_passed_count }} passed, {{ qa_failed_count }} failed</span>
+    </div>
+
+    <div class="qa-table-wrap">
+      <table class="qa-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Test Type</th>
+            <th>Test Scenario</th>
+            <th>Expected Result</th>
+            <th>Actual Result</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for test in qa_test_cases %}
+          <tr>
+            <td>{{ test.id }}</td>
+            <td>{{ test.test_type }}</td>
+            <td>{{ test.scenario }}</td>
+            <td>{{ test.expected_result }}</td>
+            <td>{{ test.actual_result }}</td>
+            <td>
+              <span class="qa-status-badge {% if test.status == 'PASS' %}pass{% else %}fail{% endif %}">{{ test.status }}</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DESIGN PATTERNS -->
+    <div class="dp-patterns-shell">
+      <div class="dp-hero" style="margin: 0 0 20px 0;">
+        <div class="dp-hero-left">
+          <h1><i class="fa-solid fa-shapes" style="color:var(--orange)"></i> Design Pattern Architecture</h1>
+          <p>This section documents the 10 Gang of Four patterns used across the ML pipeline, separate from the QA and defect-tracking dashboard.</p>
+          <div class="dp-hero-pills">
+            <span class="dp-hero-pill blue">3 Creational</span>
+            <span class="dp-hero-pill orange">3 Structural</span>
+            <span class="dp-hero-pill green">4 Behavioral</span>
+          </div>
+        </div>
+        <div class="dp-hero-right"><i class="fa-solid fa-diagram-project"></i></div>
+      </div>
+
+      <div class="dp-summary">
+        <div class="dp-sum-card">
+          <div class="dp-sum-icon total"><i class="fa-solid fa-shapes"></i></div>
+          <div><div class="dp-sum-val">10</div><div class="dp-sum-key">Total Patterns</div></div>
+        </div>
+        <div class="dp-sum-card">
+          <div class="dp-sum-icon blue"><i class="fa-solid fa-hammer"></i></div>
+          <div><div class="dp-sum-val">3</div><div class="dp-sum-key">Creational</div></div>
+        </div>
+        <div class="dp-sum-card">
+          <div class="dp-sum-icon orange"><i class="fa-solid fa-sitemap"></i></div>
+          <div><div class="dp-sum-val">3</div><div class="dp-sum-key">Structural</div></div>
+        </div>
+        <div class="dp-sum-card">
+          <div class="dp-sum-icon green"><i class="fa-solid fa-arrows-spin"></i></div>
+          <div><div class="dp-sum-val">4</div><div class="dp-sum-key">Behavioral</div></div>
+        </div>
+      </div>
+
+      <div class="dp-flow">
+        <div class="dp-flow-title"><i class="fa-solid fa-diagram-project" style="color:var(--orange)"></i> How Patterns Wire Together in the Pipeline</div>
+        <div class="dp-flow-steps">
+          <div class="dp-flow-step">
+            <div class="dp-flow-step-name">Raw CSV</div>
+            <div class="dp-flow-step-tags"><span class="dp-flow-tag blue">Input</span></div>
+          </div>
+          <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dp-flow-step">
+            <div class="dp-flow-step-name">Clean</div>
+            <div class="dp-flow-step-tags">
+              <span class="dp-flow-tag blue">Factory</span>
+              <span class="dp-flow-tag orange">Decorator</span>
+              <span class="dp-flow-tag green">Strategy</span>
+              <span class="dp-flow-tag green">Template</span>
+              <span class="dp-flow-tag green">Command</span>
+            </div>
+          </div>
+          <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dp-flow-step">
+            <div class="dp-flow-step-name">Merge</div>
+            <div class="dp-flow-step-tags"><span class="dp-flow-tag orange">Adapter</span></div>
+          </div>
+          <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dp-flow-step">
+            <div class="dp-flow-step-name">Train</div>
+            <div class="dp-flow-step-tags">
+              <span class="dp-flow-tag blue">Builder</span>
+              <span class="dp-flow-tag green">Command</span>
+              <span class="dp-flow-tag green">Observer</span>
+            </div>
+          </div>
+          <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dp-flow-step">
+            <div class="dp-flow-step-name">Save</div>
+            <div class="dp-flow-step-tags">
+              <span class="dp-flow-tag blue">Singleton</span>
+              <span class="dp-flow-tag green">Command</span>
+            </div>
+          </div>
+          <div class="dp-flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dp-flow-step">
+            <div class="dp-flow-step-name">Predict</div>
+            <div class="dp-flow-step-tags">
+              <span class="dp-flow-tag orange">Facade</span>
+              <span class="dp-flow-tag blue">Singleton</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dp-section-head" style="margin-top: 0;">
+        <span class="dp-section-badge blue"><i class="fa-solid fa-diagram-project"></i> Design Patterns</span>
+        <div class="dp-section-line"></div>
+        <span class="dp-section-count">Architecture reference section</span>
+      </div>
+
+      <!-- CREATIONAL -->
+      <div class="dp-section-head" style="margin-top: 16px;">
+        <span class="dp-section-badge blue"><i class="fa-solid fa-hammer"></i> Creational</span>
+        <div class="dp-section-line"></div>
+        <span class="dp-section-count">{{ creational|length }} patterns — deal with object creation</span>
+      </div>
+      <div class="dp-grid">
       {% for p in creational %}
       <div class="dp-card">
         <div class="dp-card-top">
@@ -246,10 +576,10 @@
         </div>
       </div>
       {% endfor %}
-    </div>
+      </div>
 
-    <!-- STRUCTURAL -->
-    <div class="dp-section-head">
+      <!-- STRUCTURAL -->
+      <div class="dp-section-head">
       <span class="dp-section-badge orange"><i class="fa-solid fa-sitemap"></i> Structural</span>
       <div class="dp-section-line"></div>
       <span class="dp-section-count">{{ structural|length }} patterns — deal with object composition</span>
@@ -273,10 +603,10 @@
         </div>
       </div>
       {% endfor %}
-    </div>
+      </div>
 
-    <!-- BEHAVIORAL -->
-    <div class="dp-section-head">
+      <!-- BEHAVIORAL -->
+      <div class="dp-section-head">
       <span class="dp-section-badge green"><i class="fa-solid fa-arrows-spin"></i> Behavioral</span>
       <div class="dp-section-line"></div>
       <span class="dp-section-count">{{ behavioral|length }} patterns — deal with communication between objects</span>
@@ -302,6 +632,7 @@
       {% endfor %}
     </div>
 
+
   </div><!-- /dp-page -->
 
   <!-- FOOTER -->
@@ -311,15 +642,19 @@
         <div class="footer-brand">
           <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="footer-amz-logo" />
           <span class="footer-x">|</span>
-          <span class="footer-name"><i class="fa-solid fa-laptop"></i> LaptopAI</span>
+          <span class="footer-name"><i class="fa-solid fa-laptop"></i> LaptopPilot</span>
         </div>
         <div class="footer-links">
-          <span>Built with Django</span><span class="fdot"></span>
-          <span>scikit-learn</span><span class="fdot"></span>
+          <span>Built with Django</span>
+          <span class="fdot"></span>
+          <span>scikit-learn</span>
+          <span class="fdot"></span>
           <span>Python</span>
         </div>
       </div>
-      <div class="footer-bottom"><span>2026 LaptopAI. 10 Design Patterns in Action.</span></div>
+      <div class="footer-bottom">
+        <span>2026 LaptopPilot. ML Powered Price Prediction Engine.</span>
+      </div>
     </div>
   </footer>
 

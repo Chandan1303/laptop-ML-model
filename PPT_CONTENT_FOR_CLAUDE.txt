@@ -1,0 +1,352 @@
+Laptop Price Prediction System
+
+Project Title: LaptopPilot
+Subject: Software Testing and Quality Assurance
+Team Members:
+- Dayanand Shivananda Sagar
+- Chandan Shridhar Hegde
+- Harsha S
+- Mohammad Masood Hassan HA
+
+------------------------------------------------------------
+Slide 1: Title Slide
+------------------------------------------------------------
+Laptop Price Prediction System
+
+Subtitle:
+A Django-based Machine Learning Web Application for Laptop Recommendation and Price Prediction
+
+Team Members:
+- Dayanand Shivananda Sagar
+- Chandan Shridhar Hegde
+- Harsha S
+- Mohammad Masood Hassan HA
+
+Course / Subject:
+Software Testing and Quality Assurance
+
+------------------------------------------------------------
+Slide 2: Introduction
+------------------------------------------------------------
+In today’s market, purchasing a laptop is challenging because there are many brands, specs, and price ranges. Customers often find it difficult to choose a laptop that matches their budget and requirements.
+
+This project solves that problem by developing a system that predicts:
+- the most suitable laptop brand based on user specifications
+- the expected laptop price based on selected features
+- realistic and compatible device combinations
+
+The system is built using Django and machine learning techniques.
+
+------------------------------------------------------------
+Slide 3: Problem Statement
+------------------------------------------------------------
+The laptop market has a wide range of prices and configurations. Buyers often struggle to determine:
+- which brand fits their requirements
+- how much a laptop should cost
+- whether their chosen configuration is realistic
+- which features are compatible with a chosen brand
+
+Traditional buying decisions are usually based on guesswork or manual comparison. There is a need for an intelligent system that helps users make better decisions.
+
+------------------------------------------------------------
+Slide 4: Objectives
+------------------------------------------------------------
+1. To develop a web application for laptop price prediction.
+2. To recommend suitable laptop brands based on user input.
+3. To estimate laptop price using machine learning.
+4. To validate input values for realistic laptop market ranges.
+5. To provide a user-friendly interface for prediction.
+6. To integrate design principles and software patterns.
+7. To deploy the application in a production-ready environment.
+
+------------------------------------------------------------
+Slide 5: Scope of the Project
+------------------------------------------------------------
+The system provides the following functionalities:
+- User login and signup
+- Email verification and password reset
+- Laptop brand prediction
+- Laptop price estimation
+- Input validation for realistic values
+- Compatibility checks between brand and hardware configuration
+- Pattern analysis and pricing trend visualization
+- Responsive web interface
+
+This project demonstrates practical use of machine learning, web development, and quality assurance in one application.
+
+------------------------------------------------------------
+Slide 6: Technologies Used
+------------------------------------------------------------
+Frontend:
+- HTML
+- CSS
+- JavaScript
+
+Backend:
+- Python
+- Django
+
+Machine Learning:
+- scikit-learn
+- Random Forest Classifier
+- Random Forest Regressor
+
+Data Processing:
+- pandas
+- numpy
+- joblib
+
+Deployment:
+- Render
+- Gunicorn
+- WhiteNoise
+
+------------------------------------------------------------
+Slide 7: System Architecture
+------------------------------------------------------------
+User Input
+   ↓
+Input Validation
+   ↓
+Feature Encoding
+   ↓
+Machine Learning Prediction
+   ↓
+Brand / Price Output
+   ↓
+Display on Web Interface
+
+The system receives user specifications such as CPU, RAM, storage, screen size, OS, and graphics. These values are validated and encoded, then sent to trained ML models for inference. Finally, the result is displayed to the user.
+
+------------------------------------------------------------
+Slide 8: Functional Modules
+------------------------------------------------------------
+1. Authentication Module
+- Login
+- Sign up
+- Email verification
+- Forgot password
+- Reset password
+
+2. Prediction Module
+- Brand recommendation
+- Price estimation
+
+3. Validation Module
+- Realistic range checking
+- Brand compatibility checks
+
+4. Pattern Module
+- Pricing trends
+- Brand analysis visualizations
+
+5. Deployment Module
+- Production-ready setup
+- Static file handling
+
+------------------------------------------------------------
+Slide 9: Machine Learning Models
+------------------------------------------------------------
+Model 1: Brand Prediction Model
+- Type: Random Forest Classifier
+- Purpose: Predicts the best matching laptop brand from selected features
+- Features used: price, rating, RAM, storage, screen size, CPU, OS, graphics
+
+Model 2: Price Prediction Model
+- Type: Random Forest Regressor
+- Purpose: Predicts likely laptop price
+- Features used: brand, RAM, storage, CPU, OS, graphics, CPU speed, sales, rating
+
+Reason for using Random Forest:
+- Handles non-linear data well
+- Works with mixed data types
+- Provides stable and reliable predictions
+
+------------------------------------------------------------
+Slide 10: Core Code Snippet 1 - Brand Prediction
+------------------------------------------------------------
+```python
+df = pd.DataFrame([{
+    'Price': price, 'Rating': rating, 'Screen_Size': screen_size,
+    'Storage_GB': storage_gb, 'RAM_GB': ram_gb,
+    'CPU': cpu, 'OS': os_val, 'Graphics': graphics
+}])
+
+df['CPU'] = le_cpu.transform(df['CPU'])
+df['OS'] = le_os.transform(df['OS'])
+df['Graphics'] = le_gfx.transform(df['Graphics'])
+
+pred = model.predict(df)
+brand = le_brand.inverse_transform(pred)[0]
+```
+
+This code prepares the user inputs, encodes categorical variables, and predicts the laptop brand using the trained model.
+
+------------------------------------------------------------
+Slide 11: Core Code Snippet 2 - Price Prediction
+------------------------------------------------------------
+```python
+df = pd.DataFrame([{
+    'Brand': _safe_encode(p_le_brand, brand),
+    'Rating': rating,
+    'Screen_Size': screen_size,
+    'Storage_GB': storage_gb,
+    'RAM_GB': ram_gb,
+    'CPU': _safe_encode(p_le_cpu, cpu),
+    'OS': _safe_encode(p_le_os, os_val),
+    'Graphics': _safe_encode(p_le_gfx, graphics),
+    'CPU_Speed': cpu_speed,
+    'Total_Sales': total_sales,
+}])
+
+predicted_price = price_model.predict(df)[0]
+```
+
+This code converts the selected values to machine-readable form and estimates the final laptop price.
+
+------------------------------------------------------------
+Slide 12: Input Validation
+------------------------------------------------------------
+The project includes real-world validation checks to avoid unrealistic entries.
+
+```python
+def _validate_realistic_laptop_inputs(price=None, ram_gb=None, storage_gb=None, cpu_speed=None, total_sales=None):
+    if price is not None and (price <= 0 or price > 500000):
+        return 'Price is unrealistic for a laptop in the real market.'
+    if ram_gb is not None and (ram_gb <= 0 or ram_gb > 256):
+        return 'RAM size is unrealistic for a laptop.'
+    if storage_gb is not None and (storage_gb <= 0 or storage_gb > 4096):
+        return 'Storage size is unrealistic for a laptop.'
+    return None
+```
+
+This ensures the model receives practical and meaningful inputs.
+
+------------------------------------------------------------
+Slide 13: Design Patterns Implemented
+------------------------------------------------------------
+The project also demonstrates key software design patterns:
+- Singleton
+- Factory Method
+- Builder
+- Adapter
+- Facade
+- Decorator
+- Strategy
+- Observer
+- Command
+- Template Method
+
+These patterns improve code structure, reusability, maintainability, and scalability.
+
+Example:
+```python
+class LaptopPredictor:
+    def predict(self, price, rating, ...):
+        # encode → infer → decode
+        return brand_name
+```
+
+------------------------------------------------------------
+Slide 14: User Interface Features
+------------------------------------------------------------
+The application includes:
+- home page for laptop brand prediction
+- price prediction form
+- drop-down selection for CPU, OS, graphics
+- realistic compatibility checking
+- result display with predicted brand and price
+- country map and brand origin information
+- login, signup, and verification pages
+
+The UI is designed to be simple and user-friendly, making it accessible to a wide audience.
+
+------------------------------------------------------------
+Slide 15: Advantages of the Project
+------------------------------------------------------------
+1. Helps users choose a laptop based on realistic needs.
+2. Provides quick and automated predictions.
+3. Uses a user-friendly and accessible web format.
+4. Reduces manual confusion during laptop buying decisions.
+5. Demonstrates integration of ML and web frameworks.
+6. Validates data to improve prediction quality.
+7. Works as a strong academic project demonstrating software engineering.
+
+------------------------------------------------------------
+Slide 16: Challenges Faced
+------------------------------------------------------------
+- Inconsistent laptop dataset values
+- Matching realistic CPU, OS, and graphics combinations
+- Cleaning noisy input data
+- Improving prediction accuracy
+- Designing a user-centric interface
+- Ensuring the app is deployable and production-ready
+
+These challenges were addressed through validation, model tuning, and robust coding practices.
+
+------------------------------------------------------------
+Slide 17: Future Enhancements
+------------------------------------------------------------
+- Add more laptop brands and models
+- Use larger and more diverse datasets
+- Add comparison between multiple laptops
+- Include recommendation for gaming, office, and student usage
+- Add admin dashboard
+- Improve model accuracy with better feature engineering
+- Add API integration for live market prices
+
+------------------------------------------------------------
+Slide 18: Conclusion
+------------------------------------------------------------
+The Laptop Price Prediction System is an effective application that combines machine learning and web development to solve a practical problem. It helps users make informed laptop purchasing decisions by predicting suitable brands and prices. The system also incorporates realistic validation, compatibility checks, user authentication, and software design patterns, making it a strong academic and engineering project.
+
+This project shows how technology can be used to simplify decision-making in real-world scenarios.
+
+------------------------------------------------------------
+Slide 19: References / Tools Used
+------------------------------------------------------------
+- Python
+- Django
+- scikit-learn
+- pandas
+- numpy
+- joblib
+- HTML, CSS, JavaScript
+- Render Deployment
+
+------------------------------------------------------------
+Slide 20: Thank You
+------------------------------------------------------------
+Thank You
+
+Questions and Discussion
+
+------------------------------------------------------------
+Extra: Short Presentation Script (1–2 minutes)
+------------------------------------------------------------
+“Hello everyone, today we are presenting the Laptop Price Prediction System, a machine learning-based web application that predicts suitable laptop brands and price ranges based on user input. The main objective of the project is to help customers choose a laptop that matches their budget and technical requirements. We used Django for the backend and scikit-learn for building the prediction models. The system accepts inputs such as RAM, storage, CPU, OS, graphics, screen size, and rating. These values are validated to ensure they are realistic for the laptop market. Then the system predicts the most suitable brand and estimates its price. We also added authentication features such as login, signup, email verification, and password reset. In addition, the project demonstrates software design patterns and deployable architecture. Overall, this project combines machine learning, full-stack development, and quality assurance into one practical and useful application.”
+
+------------------------------------------------------------
+Extra: Very Short PPT Points
+------------------------------------------------------------
+- Machine learning-based laptop recommendation system
+- Predicts laptop brand and price
+- Uses Django and Random Forest models
+- Realistic input validation
+- Compatible brand feature rules
+- Web-based interface with login and signup
+- Pattern analysis and deployment-ready architecture
+- Practical AI + web application project
+
+------------------------------------------------------------
+Project Keywords for Search / PPT Title Ideas
+------------------------------------------------------------
+- Laptop Price Prediction System
+- Laptop Recommendation Using Machine Learning
+- Django ML Price Prediction Project
+- Smart Laptop Selection System
+- Predictive Model for Laptop Pricing
+- AI-based Laptop Buying Assistant
+
+------------------------------------------------------------
+End of Document

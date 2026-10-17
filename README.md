@@ -83,6 +83,32 @@ python manage.py runserver
 
 8. Open your browser and navigate to `http://localhost:8000`
 
+## QA, Testing, and Defect Analysis
+
+This project includes automated Django tests for both backend ML logic and frontend behavior, along with structured QA documentation for defect reporting.
+
+### Test Coverage
+
+- Standard Django route, form, and validation tests
+- Black-box frontend tests for visible fields, validation messages, and navigation
+- White-box tests for internal validation branches and compatibility logic
+
+Run the full suite with:
+
+```bash
+python manage.py test
+```
+
+The project also includes defect analysis documents:
+
+- [DEFECT_REPORT_IEEE829.md](DEFECT_REPORT_IEEE829.md)
+- [DEFECT_LIFE_CYCLE.md](DEFECT_LIFE_CYCLE.md)
+- [QA_TEST_REPORT.md](QA_TEST_REPORT.md)
+
+### Defect Metrics
+
+The frontend defect density and productivity figures are documented in the QA reports. The calculation reflects the browser-facing screens and validation logic used in the home and price prediction pages.
+
 ## Production Deployment
 
 ### Deploy to Render (Recommended)

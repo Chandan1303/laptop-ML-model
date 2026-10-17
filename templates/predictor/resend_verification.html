@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resend verification - LaptopPilot</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="login-page">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-logo-block"><img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="amazon-logo-img" /></div>
+        <div class="nav-sep"></div>
+        <div class="nav-brand"><i class="fa-solid fa-laptop nav-brand-icon"></i><span class="nav-brand-text">LaptopPilot</span></div>
+      </div>
+      <div class="nav-right"><a href="{% url 'login' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <div class="page-inner login-page-inner">
+      <div class="col-left">
+        {% if error %}<div class="alert-error"><i class="fa-solid fa-circle-exclamation"></i> <span>{{ error }}</span></div>{% endif %}
+        {% if success %}<div class="result-card animate-drop" style="background:#f0fdf4;border-color:#bbf7d0;"><div class="result-top" style="background:#f0fdf4;border-bottom:1px solid #bbf7d0;"><div class="result-top-left"><div class="result-check"><i class="fa-solid fa-envelope-circle-check"></i></div><div><div class="result-eyebrow" style="color:#047857;">Email sent</div><div class="result-brand-name" style="font-size:1.3rem;color:#065f46;">{{ success }}</div></div></div></div></div>{% endif %}
+
+        <div class="form-card login-card">
+          <div class="form-card-header">
+            <div class="form-card-title"><i class="fa-solid fa-envelope"></i> Resend verification email</div>
+            <div class="form-card-sub">Enter the email address linked to your account</div>
+          </div>
+          <form method="POST" class="spec-form login-form">
+            {% csrf_token %}
+            <div class="spec-section-label">Verification</div>
+            <div class="field">
+              <label for="email"><i class="fa-solid fa-envelope"></i> Email address</label>
+              <div class="input-wrap"><input type="email" id="email" name="email" placeholder="you@example.com" required /></div>
+            </div>
+            <button type="submit" class="predict-btn" id="submitBtn"><span id="btnText">Send verification link</span><i class="fa-solid fa-spinner fa-spin" id="btnSpinner" style="display:none"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer-inner"><div class="footer-top"><div class="footer-brand"><img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="footer-amz-logo" /><span class="footer-x">|</span><span class="footer-name"><i class="fa-solid fa-laptop"></i> LaptopPilot</span></div><div class="footer-links"><span>Built with Django</span><span class="fdot"></span><span>scikit-learn</span><span class="fdot"></span><span>Python</span></div></div><div class="footer-bottom"><span>2026 LaptopPilot. ML Powered Brand Prediction Engine.</span></div></div></footer>
+
+  <script>
+    document.querySelectorAll('.spec-form').forEach(function(form){
+      form.addEventListener('submit', function(){
+        const btn=form.querySelector('#submitBtn'); const spinner=form.querySelector('#btnSpinner'); const label=form.querySelector('#btnText');
+        if (label) label.textContent='Sending...';
+        if (spinner) spinner.style.display='inline-block';
+        if (btn) btn.disabled=true;
+      });
+    });
+  </script>
+</body>
+</html>

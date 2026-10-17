@@ -1,3 +1,16 @@
+# Project Title: LaptopPilot
+# Subject: Software Testing and Quality Assurance
+# Team Members:
+# USN1: 4NI23IS252
+# Name1: Dayanand Shivananda Sagar
+# USN2: 4NI23IS253
+# Name2: Chandan Shridhar Hegde
+# USN3: 4NI24IS408
+# Name3: Harsha S
+# USN4: 4NI24IS412
+# Name4: Mohammad Masood Hassan HA
+# Date of code writing: 14-09-2026 to 25-09-2026
+
 """
 Django settings for laptop_predictor project.
 
@@ -17,6 +30,23 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def load_local_environment():
+    """Load untracked local settings without overriding deployment variables."""
+    env_file = BASE_DIR / '.env'
+    if not env_file.exists():
+        return
+
+    for line in env_file.read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+        key, value = line.split('=', 1)
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+load_local_environment()
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -26,8 +56,27 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-q6-2^_1vl1wtr9j&@^9!q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+DEFAULT_ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
+configured_hosts = os.environ.get('ALLOWED_HOSTS', ','.join(DEFAULT_ALLOWED_HOSTS))
+ALLOWED_HOSTS = [host.strip() for host in configured_hosts.split(',') if host.strip()]
+for host in DEFAULT_ALLOWED_HOSTS:
+    if host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
+# Public site URL used for email verification links on laptop and mobile devices.
+PUBLIC_BASE_URL = os.environ.get('PUBLIC_BASE_URL', '').rstrip('/')
+if PUBLIC_BASE_URL:
+    CSRF_TRUSTED_ORIGINS = [PUBLIC_BASE_URL]
 
+# Email configuration for account verification and password reset
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() in {'1', 'true', 'yes', 'on'}
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', EMAIL_HOST_USER)
+EMAIL_TIMEOUT = 30
 
 # Application definition
 
@@ -121,10 +170,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# WhiteNoise configuration for static file serving
+# WhiteNoise configuration for static file serving.
+# Use the non-manifest storage during local testing so static assets can render
+# without requiring a collectstatic manifest to be generated beforehand.
 STORAGES = {
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
     },
 }
 

@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create account - LaptopPilot</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="login-page">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-logo-block">
+          <img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="amazon-logo-img" />
+        </div>
+        <div class="nav-sep"></div>
+        <div class="nav-brand">
+          <i class="fa-solid fa-laptop nav-brand-icon"></i>
+          <span class="nav-brand-text">LaptopPilot</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="{% url 'index' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;">
+          <i class="fa-solid fa-tag"></i> Brand Predictor
+        </a>
+        <a href="{% url 'predict_price' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-indian-rupee-sign"></i> Price Predictor
+        </a>
+        <a href="{% url 'login' %}" style="color:var(--nav-text);text-decoration:none;font-size:13px;font-weight:500;opacity:.8;margin-left:16px;">
+          <i class="fa-solid fa-right-to-bracket"></i> Login
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow"><i class="fa-solid fa-user-plus"></i> New account</div>
+        <h1 class="hero-title">Create your<br /><span class="hero-title-accent">LaptopPilot account</span></h1>
+        <p class="hero-desc">Register with a valid email and verify it before you can access the ML prediction tools.</p>
+      </div>
+      <div class="hero-right">
+        <div class="hero-card-visual">
+          <div class="hcv-icon-wrap"><i class="fa-solid fa-user-plus hcv-icon"></i></div>
+          <div class="hcv-badge"><img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="hcv-amz-logo" /><span>Secure</span></div>
+          <div class="hcv-tags"><span class="hcv-tag">Email Verify</span><span class="hcv-tag">Secure</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="page-main">
+    <div class="page-inner login-page-inner">
+      <div class="col-left">
+        {% if error %}
+        <div class="alert-error"><i class="fa-solid fa-circle-exclamation"></i> <span>{{ error }}</span></div>
+        {% endif %}
+        {% if success %}
+        <div class="result-card animate-drop" style="background:#f0fdf4;border-color:#bbf7d0;">
+          <div class="result-top" style="background:#f0fdf4;border-bottom:1px solid #bbf7d0;">
+            <div class="result-top-left">
+              <div class="result-check"><i class="fa-solid fa-envelope-circle-check"></i></div>
+              <div>
+                <div class="result-eyebrow" style="color:#047857;">Verification email sent</div>
+                <div class="result-brand-name" style="font-size:1.4rem;color:#065f46;">{{ success }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="form-card login-card">
+          <div class="form-card-header">
+            <div class="form-card-title"><i class="fa-solid fa-user-plus"></i> Sign up</div>
+            <div class="form-card-sub">Create a new account using your email</div>
+          </div>
+          <form method="POST" class="spec-form login-form">
+            {% csrf_token %}
+            <div class="spec-section-label">Account setup</div>
+
+            <div class="field">
+              <label for="username"><i class="fa-solid fa-user"></i> Username</label>
+              <div class="input-wrap"><input type="text" id="username" name="username" placeholder="Enter username" required /></div>
+            </div>
+
+            <div class="field">
+              <label for="email"><i class="fa-solid fa-envelope"></i> Email address</label>
+              <div class="input-wrap"><input type="email" id="email" name="email" placeholder="you@example.com" required /></div>
+            </div>
+
+            <div class="field">
+              <label for="password1">Password</label>
+              <div class="input-wrap password-input-wrap">
+                <input type="password" id="password1" name="password1" placeholder="Create password" required />
+                <button type="button" class="password-toggle-btn" data-target="password1" aria-label="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="password2">Confirm password</label>
+              <div class="input-wrap password-input-wrap">
+                <input type="password" id="password2" name="password2" placeholder="Repeat password" required />
+                <button type="button" class="password-toggle-btn" data-target="password2" aria-label="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="predict-btn" id="submitBtn"><span id="btnText">Create account</span><i class="fa-solid fa-spinner fa-spin" id="btnSpinner" style="display:none"></i></button>
+
+            <div style="margin-top: 14px; text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+              Already have an account?
+              <a href="{% url 'login' %}" style="color: var(--blue); text-decoration: none; font-weight: 600;">Sign in</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="side-card side-card-dark">
+          <div class="side-card-title"><i class="fa-solid fa-circle-check"></i> Email verification</div>
+          <div class="steps">
+            <div class="step"><div class="step-num">1</div><div><div class="step-head">Create account</div><div class="step-sub">Register your username and email address.</div></div></div>
+            <div class="step"><div class="step-num">2</div><div><div class="step-head">Verify email</div><div class="step-sub">Open the verification link sent to your inbox.</div></div></div>
+            <div class="step"><div class="step-num">3</div><div><div class="step-head">Sign in</div><div class="step-sub">Your account becomes active and ready to use on any device.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer-inner"><div class="footer-top"><div class="footer-brand"><img src="{% static 'amazon-logo-editorial-icon-isolated-600nw-2333488123.webp' %}" alt="Amazon" class="footer-amz-logo" /><span class="footer-x">|</span><span class="footer-name"><i class="fa-solid fa-laptop"></i> LaptopPilot</span></div><div class="footer-links"><span>Built with Django</span><span class="fdot"></span><span>scikit-learn</span><span class="fdot"></span><span>Python</span></div></div><div class="footer-bottom"><span>2026 LaptopPilot. ML Powered Brand Prediction Engine.</span></div></div></footer>
+
+  <script>
+    document.querySelectorAll('.password-toggle-btn').forEach(function (button) {
+      button.addEventListener('click', function () {
+        const target = document.getElementById(button.dataset.target);
+        if (!target) return;
+        const isHidden = target.type === 'password';
+        target.type = isHidden ? 'text' : 'password';
+        button.innerHTML = isHidden ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+        button.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+      });
+    });
+
+    document.querySelectorAll('.spec-form').forEach(function(form) {
+      form.addEventListener('submit', function(){
+        const btn=form.querySelector('#submitBtn');
+        const spinner=form.querySelector('#btnSpinner');
+        const label=form.querySelector('#btnText');
+        if (label) label.textContent = 'Processing...';
+        if (spinner) spinner.style.display='inline-block';
+        if (btn) btn.disabled=true;
+      });
+    });
+  </script>
+</body>
+</html>
